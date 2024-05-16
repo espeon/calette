@@ -150,7 +150,7 @@ const generateRandomPalette = (
 
 const ColorGen = () => {
   const [numColors, setNumColors] = useState(5);
-  const [palette, setPalette] = useState(generateRandomPalette(5));
+  const [palette, setPalette] = useState(["#2b0594", "#700092", "#9e008d", "#c40087", "#e3187f"]);
   const [locked, isLocked] = useState([false]);
 
   const [isRefreshing, setIsRefreshing] = useState(false);
