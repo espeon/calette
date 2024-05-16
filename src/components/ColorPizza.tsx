@@ -1,31 +1,34 @@
-import chroma from "chroma-js";
+import chroma, { hex } from "chroma-js";
 import React, { useState, useEffect } from "react";
+
+let defaultkv = {
+    "#2b0594":"Full Swing Indigo",
+    "#700092":"Chinese Purple",
+    "#9e008d":"Vanishing Night",
+    "#c40087":"Medium Violet Red",
+    "#e3187f":"Mexican Pink"
+}
 
 const ColorPizza = ({
   hexValue,
   className,
+  colorName = undefined
 }: {
   hexValue: string;
   className: string;
+  colorName?: string;
 }) => {
-  const [paletteTitle, setPaletteTitle] = useState(".isloading");
+  const [paletteTitle, setPaletteTitle] = useState((defaultkv as any)[hexValue] != undefined ? (defaultkv as any)[hexValue] : ".isloading");
+
+  console.log((defaultkv as any)[hexValue])
 
   useEffect(() => {
-    const fetchData = async () => {
-      setPaletteTitle(".isloading");
-      try {
-        const response = await fetch(
-          `https://api.color.pizza/v1/${hexValue.replace("#", "")}`
-        );
-        const data = await response.json();
+    fetch(`https://api.color.pizza/v1/${hexValue.replace("#", "")}`)
+      .then((res) => res.json())
+      .then((data) => {
         setPaletteTitle(data.paletteTitle);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  }, [hexValue]);
+      })
+  }, [hexValue])
 
   if (paletteTitle === ".isloading") {
     return (
