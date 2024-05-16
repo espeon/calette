@@ -1,9 +1,11 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import chroma, { Color } from "chroma-js";
 import { PiPlus, PiMinus, PiLock, PiLockOpen } from "react-icons/pi";
-import { IoIosRefresh } from "react-icons/io";
+import { IoIosHeart, IoIosRefresh } from "react-icons/io";
 import ColorPizza from "./ColorPizza";
+import SimplePalette from "./SimplePalette";
+import { RiHeart2Line, RiHeartFill, RiHeartLine } from "react-icons/ri";
 
 const calculateReasonableColor = (color: Color, colorNext: Color) => {
   // get the complement of the color
@@ -151,6 +153,22 @@ const ColorGen = () => {
   const [palette, setPalette] = useState(generateRandomPalette(5));
   const [locked, isLocked] = useState([false]);
 
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  useEffect(() => {
+    const handleKeyUp = (event: { key: any; }) => {
+      if (event.key === 'Enter' || event.key === " ") { 
+        setRandomPalette();
+      }
+    };
+
+    window.addEventListener('keyup', handleKeyUp);
+    return () => {
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, []);
+
+
   const setRandomPalette = () => {
     console.log("generating palette");
     setPalette(generateRandomPalette(numColors, locked, palette));
@@ -161,12 +179,6 @@ const ColorGen = () => {
     const newLocked = [...locked];
     newLocked[index] = !newLocked[index];
     isLocked(newLocked);
-  };
-
-  const onKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === " " || event.key === "Enter") {
-      setRandomPalette();
-    }
   };
 
   const onNumColorsClick = (dir: number) => {
@@ -185,19 +197,25 @@ const ColorGen = () => {
     }
   };
 
+  const onRefreshClick = () => {
+    setIsRefreshing(true);
+    setRandomPalette();
+    setTimeout(() => {
+      setIsRefreshing(false);
+    }, 1000);
+  };
+
   return (
-    <div onKeyUp={(e) => onKeyDown(e)}>
-      <button className="pl-2" onClick={setRandomPalette}>
+    <div>
+      <button className={`ml-2 pb-0.5 transition hover:scale-110 ${isRefreshing ? "refresh-colors" : ""}`} onClick={onRefreshClick}>
         <IoIosRefresh className="w-6 h-6" />
       </button>
-      <div className="flex">
+      <div className="flex max-w-7xl w-screen rounded-xl">
         {palette.map((color, i) => (
           <div
-            key={color + i}
+            key={i}
             style={{ backgroundColor: color }}
-            className={`w-48 h-48 flex flex-col items-start justify-end ${
-              i == 0 ? "rounded-l-xl" : i == numColors - 1 ? "rounded-r-xl" : ""
-            }`}
+            className={`h-64 w-full flex flex-col items-start justify-end first:rounded-l-xl last:rounded-r-xl group transition duration-500 transition-all`}
           >
             <button
               onClick={() => setColorLocked(i)}
@@ -211,15 +229,15 @@ const ColorGen = () => {
             >
               {locked[i] == true ? (
                 <PiLock
-                  className={`w-6 h-6 ${
+                  className={`w-6 h-6 transition duration-150 transition-all ${
                     chroma.contrast(color, "#e2e8f0") > 4.5
-                      ? "text-slate-200"
-                      : "text-black"
+                      ? "text-slate-200/50 group-hover:text-slate-200"
+                      : "text-black/50 group-hover:text-black"
                   }`}
                 />
               ) : (
                 <PiLockOpen
-                  className={`w-6 h-6 ${
+                  className={`w-6 h-6 opacity-0 group-hover:opacity-100 transition duration-150 transition-all ${
                     chroma.contrast(color, "#e2e8f0") > 4.5
                       ? "text-slate-200"
                       : "text-black"
@@ -236,7 +254,7 @@ const ColorGen = () => {
             >
               {color}
             </div>
-            <ColorPizza hexValue={color} className={`ml-2 font-mono -mt-1 pb-1 text-md ${
+            <ColorPizza hexValue={color} className={`mx-2 font-mono -mt-1 pb-1 text-md ${
                 chroma.contrast(color, "#e2e8f0") > 4.5
                   ? "text-slate-200"
                   : "text-black"
@@ -245,13 +263,17 @@ const ColorGen = () => {
         ))}
       </div>
       <div className="pt-2 pl-2">
-        <button onClick={() => onNumColorsClick(1)}>
+        <button onClick={() => onNumColorsClick(1)} disabled={numColors >= 12} className="disabled:text-gray-500 transition duration-150 transition-all hover:scale-110 disabled:hover:scale-100">
           <PiPlus className="w-6 h-6" />
         </button>
-        <button onClick={() => onNumColorsClick(-1)}>
+        <button onClick={() => onNumColorsClick(-1)} disabled={numColors <= 2} className="disabled:text-gray-500 transition duration-150 transition-all hover:scale-110 disabled:hover:scale-100">
           <PiMinus className="w-6 h-6 ml-2" />
         </button>
+        <button className="ml-3 transition duration-150 transition-all hover:scale-110">
+          <RiHeartLine className="w-6 h-6" />
+        </button>
       </div>
+      <SimplePalette colors={palette} />
     </div>
   );
 };

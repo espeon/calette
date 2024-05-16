@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+.refresh-colors {
+  animation: spin 1s cubic-bezier(.34,.6,.85,1.2) infinite;
+}
+@keyframes spin {
+  10% { transform: rotate(360deg); }
+  90% { transform: rotate(1300deg); }
+  99.999% { transform: rotate(1440deg); }
+  100% { transform: rotate(0deg); }
+}
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
