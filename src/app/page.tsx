@@ -7,7 +7,7 @@ export default function Home() {
     .mode("lch")
     .colors(5);
   return (
-    <main className="flex min-h-screen flex-col items-center justify-top p-24">
+    <main className="flex min-h-screen max-w-screen w-full flex-col items-center justify-top p-24">
       <div className="flex flex-col items-left">
         <div className="pl-2 pb-8">
           <h1 className="text-4xl">calette</h1>

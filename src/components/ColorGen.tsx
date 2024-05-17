@@ -210,12 +210,12 @@ const ColorGen = () => {
       <button className={`ml-2 pb-0.5 transition hover:scale-110 ${isRefreshing ? "refresh-colors" : ""}`} onClick={onRefreshClick}>
         <IoIosRefresh className="w-6 h-6" />
       </button>
-      <div className="flex max-w-7xl w-screen rounded-xl">
+      <div className="flex flex-col px-4 md:flex-row max-w-3xl lg:max-w-5xl xl:max-w-7xl w-full max-h-[80vh] h-[70vh] md:max-h-full md:h-full duration-500 transition-all rounded-xl">
         {palette.map((color, i) => (
           <div
             key={i}
             style={{ backgroundColor: color }}
-            className={`h-64 w-full flex flex-col items-start justify-end first:rounded-l-xl last:rounded-r-xl group transition duration-500 transition-all`}
+            className={`flex-grow md:h-64 max-w-72 w-64 md:w-32 lg:w-48 xl:w-72 flex flex-col items-start justify-end first:rounded-t-xl last:rounded-b-xl md:first:rounded-l-xl md:last:rounded-r-xl md:first:rounded-tr-none md:last:rounded-bl-none group duration-500 transition-all`}
           >
             <button
               onClick={() => setColorLocked(i)}
@@ -229,7 +229,7 @@ const ColorGen = () => {
             >
               {locked[i] == true ? (
                 <PiLock
-                  className={`w-6 h-6 transition duration-150 transition-all ${
+                  className={`w-6 h-6 duration-150 transition-all ${
                     chroma.contrast(color, "#e2e8f0") > 4.5
                       ? "text-slate-200/50 group-hover:text-slate-200"
                       : "text-black/50 group-hover:text-black"
@@ -263,13 +263,13 @@ const ColorGen = () => {
         ))}
       </div>
       <div className="pt-2 pl-2">
-        <button onClick={() => onNumColorsClick(1)} disabled={numColors >= 12} className="disabled:text-gray-500 transition duration-150 transition-all hover:scale-110 disabled:hover:scale-100">
+        <button onClick={() => onNumColorsClick(1)} disabled={numColors >= 12} className="disabled:text-gray-500 duration-150 transition-all hover:scale-110 disabled:hover:scale-100">
           <PiPlus className="w-6 h-6" />
         </button>
-        <button onClick={() => onNumColorsClick(-1)} disabled={numColors <= 2} className="disabled:text-gray-500 transition duration-150 transition-all hover:scale-110 disabled:hover:scale-100">
+        <button onClick={() => onNumColorsClick(-1)} disabled={numColors <= 2} className="disabled:text-gray-500 duration-150 transition-all hover:scale-110 disabled:hover:scale-100">
           <PiMinus className="w-6 h-6 ml-2" />
         </button>
-        <button className="ml-3 transition duration-150 transition-all hover:scale-110">
+        <button className="ml-3 duration-150 transition-all hover:scale-110">
           <RiHeartLine className="w-6 h-6" />
         </button>
       </div>
